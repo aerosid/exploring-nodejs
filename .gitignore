@@ -128,3 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# User
+.bashrc
+.bash_history
+.git-credentials
+.gitconfig
+.profile
+.ssh/
+.vscode-server/

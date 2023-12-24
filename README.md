@@ -146,17 +146,12 @@ http {
   access_log /var/log/nginx/access.log;
   error_log /var/log/nginx/error.log;
   gzip on;
-  root /var/www/html;
-  index index.nginx-debian.html;
-  upstream backend {
-      server localhost:8080;
-  }
   server {
     listen              80 default_server;
     server_name         127.0.0.1 localhost openai.ifonepay.com;
-    location  / {
-        # https://stackoverflow.com/questions/16157893/nginx-proxy-pass-404-error-dont-understand-why
-        proxy_pass      http://backend/;
+    location / {
+      # https://stackoverflow.com/questions/16157893/nginx-proxy-pass-404-error-dont-understand-why
+      proxy_pass         http://127.0.0.1:8080/;
     }
   }
   server {
@@ -164,9 +159,9 @@ http {
     server_name         127.0.0.1 localhost openai.ifonepay.com;
     ssl_certificate     /etc/letsencrypt/live/openai.ifonepay.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/openai.ifonepay.com/privkey.pem;
-    location  / {
-        # https://stackoverflow.com/questions/16157893/nginx-proxy-pass-404-error-dont-understand-why
-        proxy_pass      http://backend/;
+    location / {
+      # https://stackoverflow.com/questions/16157893/nginx-proxy-pass-404-error-dont-understand-why
+      proxy_pass        http://127.0.0.1:8080/;
     }
   }
 }
@@ -198,6 +193,15 @@ sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d openai.ifonepay.com
 sudo systemctl status certbot.timer # verify that auto-renewal is enabled
 sudo certbot renew --dry-run # test auto-renewal 
+```
+
+## VSCode Setup
+See:
+1. [ESLint](https://www.digitalocean.com/community/tutorials/linting-and-formatting-with-eslint-in-vs-code)
+2. [JSDoc](https://marketplace.visualstudio.com/items?itemName=crystal-spider.jsdoc-generator)
+```
+npm install eslint --save-dev
+./node_modules/.bin/eslint --init
 ```
 
 ## Notes
