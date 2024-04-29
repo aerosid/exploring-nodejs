@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
-import Greeting from "./Greeting.mjs";
+// import Conversation from "./openai/conversation.mjs";
 
-console.log(Greeting.build().greeting("Howdy!").toString());
+// const systemMsg = "You are a sassy AI.  Your task is to provide single sentences responses.";
+// Conversation.build(systemMsg).start();
+
+import App from "./express/app.mjs";
+
+App.build().init();

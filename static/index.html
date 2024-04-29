@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Chatbot</title>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- https://github.com/Azure-Samples/cognitive-services-speech-sdk/blob/master/quickstart/javascript/browser/from-microphone/index.html -->
+    <script src="https://aka.ms/csspeech/jsbrowserpackageraw"></script>
+    <script type="text/javascript" src="./stt.js"></script>
+    <script type="text/javascript" src="./tts.js"></script>
+  </head>
+  <body style="padding: 0.1rem; width: 30rem;">
+    <div id="connected">
+      <button id="button" style="font: bold 2rem Arial; width: 20rem;" onclick="onClick()">Click to Speak</button>
+    </div>
+    <div id="disconnected" style="font: bold 2rem Arial; display: none;">
+      Disconnected
+    </div>
+    <div id="content" style="padding-top: 0.5rem; font: normal 1rem Courier; color: black">
+      Say, "Good bye" to disconnect.
+    </div>
+    <script type="text/javascript">
+      const stt = Stt.build();
+
+      const tts = Tts.build();
+
+      const api = async (uri, data) => {
+        const config = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        };
+        const res = await fetch(uri, config);
+        const json = await res.json();
+        return json;
+      };
+
+      const converse = async () => {
+        let keepConversing = false;
+        $("#button").attr('disabled', 'disabled').html("Now Speak ...");
+        await stt.start();
+        $("#button").attr('disabled', 'disabled').html("Wait ...");
+        let text = stt.text;
+        if (text.toLowerCase().includes("bye")) {
+          keepConversing = false;
+        } else {
+          keepConversing = true;
+          const data = { text: text };
+          let json = await api("./converse", data);
+          await tts.start(json.text);
+        }
+        $("#button").removeAttr('disabled').html("Click to Speak");
+        return keepConversing;
+      };
+
+      const destroy = async () => {
+        await stt.destroy();
+        await tts.destroy();
+      };
+
+      const init = async () => {
+        $("#connected").show();
+        $("#disconnected").hide();
+        $("#content").empty().html("To disconnect, say \"Good bye\".");
+        $("#button").attr('disabled', 'disabled').html("Wait ...");
+        await stt.permission();
+        await stt.init();
+        await tts.init();
+        await api("./init");
+        $("#button").removeAttr('disabled').html("Click to Speak");
+      };
+
+      onClick = async () => {
+        let keepConversing = await converse();
+        if (!keepConversing) {
+          $("#connected").hide();
+          $("#disconnected").show();
+          $("#content").empty().html("To connect, reload page.")
+        } else {
+
+        }
+        console.log("onClick");
+      };
+
+      window.onload = async () => {
+        await init();
+      };
+    </script>
+  </body>
+</html>

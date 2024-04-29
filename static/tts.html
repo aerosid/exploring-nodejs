@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>Speech to Text</title>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- https://github.com/Azure-Samples/cognitive-services-speech-sdk/blob/master/quickstart/javascript/browser/from-microphone/index.html -->
+    <script src="https://aka.ms/csspeech/jsbrowserpackageraw"></script>
+    <script type="text/javascript" src="./tts.js"></script>
+</script>
+  </head>
+  <body style="padding: 0.1rem; width: 30rem;">
+    <div id="wait" style="font: bold 2rem Arial; color: red">Wait ...</div>
+    <div id="speak" style="font: bold 2rem Arial; color: green">Speak</div>
+    <div id="content" style="padding-top: 0.5rem; font: normal 1rem Courier; color: black">Hello World!</div>
+    <script type="text/javascript">
+      window.onload = async () => {
+        $("#wait").show();
+        $("#speak").hide();
+        $("#content").show().empty();
+
+        let text = "The quick brown fox jumped over the lazy dog.";
+        await Tts.build().play(text);
+      };
+    </script>
+  </body>
+</html>
